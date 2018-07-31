@@ -18,7 +18,7 @@
             </form>
           </div>
 
-          <h2 class="sub-header">Formulários Atendimento Equipe</h2>
+          <h2 class="sub-header">Atendimento Equipe</h2>
           <div class="table-responsive">
             <table class="table table-striped table-bordered table-hover table-condensed" id="table_id">
               <thead>

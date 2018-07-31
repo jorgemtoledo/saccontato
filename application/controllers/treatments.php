@@ -43,11 +43,9 @@ class Treatments extends CI_Controller {
 		$get_total_results = $this->treatments_model->listTreatments($busca);
 		$total_resultados = $get_total_results['total'];
 		$get_paginacao = $this->paginacao_func($url_paginacao, $total_resultados, 60);
-
-	  	$get_treatments = $this->treatments_model->listTreatments($busca,$get_paginacao['inicio'],$get_paginacao['qtidade_re']);
-
-	   	$this->load->view('treatments/index.php', array("treatments"=>$get_treatments['dados'], 'busca'=>$busca, "pag"=>$get_paginacao['paginacao']));
-  		/*Paginação*/		
+	  $get_treatments = $this->treatments_model->listTreatments($busca,$get_paginacao['inicio'],$get_paginacao['qtidade_re']);
+	  $this->load->view('treatments/index.php', array("treatments"=>$get_treatments['dados'], 'busca'=>$busca, "pag"=>$get_paginacao['paginacao']));
+  	/*Paginação*/		
 		$this->load->view('includes/html_footer');
 	}
 
@@ -93,23 +91,16 @@ class Treatments extends CI_Controller {
 		return $dados;
 	}
 
-
 	public function add()
 	{
 		$this->verifcar_sessao();
 
 		$this->load->model("treatments_model");
 		$motorcycles = $this->treatments_model->listMotorcyclescombo();
-
 		$ambulances = $this->treatments_model->listAmbulancescombo();
-
 		$clients = $this->treatments_model->listClientscombo();
 
-		$dados = array(
-					"motorcycles"=>$motorcycles,
-					"ambulances"=>$ambulances,
-					"clients"=>$clients);
-
+		$dados = array("motorcycles"=>$motorcycles, "ambulances"=>$ambulances, "clients"=>$clients);
 		$this->load->view('includes/html_header');
 		$this->load->view('includes/menu_left');
 		$this->load->view('treatments/addtreatment.php', $dados);
@@ -122,9 +113,7 @@ class Treatments extends CI_Controller {
 
 		$dataInicial = $this->input->post('date');
 		$dataInicial = explode('/', $dataInicial);
-        $dataInicial = $dataInicial[2].'-'.$dataInicial[1].'-'.$dataInicial[0];
-		// $dataInicial = date('Y/m/d');
-
+    $dataInicial = $dataInicial[2].'-'.$dataInicial[1].'-'.$dataInicial[0];
 
 		$data['client_id'] = $this->input->post('client_id');
 		$data['date'] = $dataInicial;
@@ -146,22 +135,14 @@ class Treatments extends CI_Controller {
 		$data['created'] = date('Y-m-d H:i:s');
 		$data['modified'] = date('Y-m-d H:i:s');
 
-		// echo "<pre>";
-		// var_dump($data);
-		// echo "</pre>";
-		// die();
-
-
 		$this->load->model('treatments_model', 'model', TRUE);
 
-			if ($this->model->savetreatment($data)) {
-						redirect('treatments/1');
-			} else {
-						redirect('treatments/2');
-			}
-	}
-
-	
+    if ($this->model->savetreatment($data)) {
+          redirect('treatments/1');
+    } else {
+          redirect('treatments/2');
+    }
+	}	
 
 	public function delete($id=null)
 	{
@@ -169,21 +150,17 @@ class Treatments extends CI_Controller {
 
 		$this->db->where('id',$id);
 		if ($this->db->delete('treatments')) {
-						redirect('treatments/3');
-			} else {
-						redirect('treatments/4');
-			}
+		  redirect('treatments/3');
+		} else {
+			redirect('treatments/4');
+		}
 	}
 
 	public function view($id=null)
 	{
 		$this->verifcar_sessao();
-
 		$this->load->model("treatments_model");
-
-
 		$this->data['result'] = $this->treatments_model->viewTreatments($this->uri->segment(3));
-
 		$this->load->view('includes/html_header');
 		$this->load->view('includes/menu_left');
 		$this->load->view('treatments/view.php',$this->data);
@@ -193,74 +170,51 @@ class Treatments extends CI_Controller {
 	public function edit($id=null)
 	{
 		$this->verifcar_sessao();
-
 		$this->load->model("treatments_model");
-
-
 		$this->data['result'] = $this->treatments_model->editviewTreatments($this->uri->segment(3));
-
 		$this->load->view('includes/html_header');
 		$this->load->view('includes/menu_left');
 		$this->load->view('treatments/edittreatment.php',$this->data);
 		$this->load->view('includes/html_footer');
 	}
 
-
 	// Editar ***
 	public function save_editteam()
 	{
 		$this->verifcar_sessao();
-
 		$dataInicial = $this->input->post('date');
 		$dataInicial = explode('/', $dataInicial);
-        $dataInicial = $dataInicial[2].'-'.$dataInicial[1].'-'.$dataInicial[0];
-		// $dataInicial = date('Y/m/d');
-
+    $dataInicial = $dataInicial[2].'-'.$dataInicial[1].'-'.$dataInicial[0];
 
 		$id = $this->input->post('id');
-		// $data['client_id'] = $this->input->post('client_id');
 		$data['date'] = $dataInicial;
 		$data['hour'] = $this->input->post('hour');
 		$data['type_care'] = $this->input->post('type_care');
 		$data['description_care'] = $this->input->post('description_care');
 		$data['information_care'] = $this->input->post('information_care');
 		$data['number_radio'] = $this->input->post('number_radio');
-		// $data['motorcycle'] = $this->input->post('motorcycle');
-		// $data['motorcycle_id'] = $this->input->post('motorcycle_id');
-		// $data['ambulance'] = $this->input->post('ambulance');
-		// $data['ambulance_id'] = $this->input->post('ambulance_id');
 		$data['name_contact'] = $this->input->post('name_contact');
 		$data['phone_contact'] = $this->input->post('phone_contact');
 		$data['hour_contact'] = $this->input->post('hour_contact');
 		$data['approved'] = $this->input->post('approved');
-		//$data['user_id'] = $this->session->userdata('id');
-
-		// echo "<pre>";
-		// var_dump($data,$id);
-		// echo "</pre>";
-		// die();
-
 
 		$this->load->model('treatments_model', 'model', TRUE);
 
-			if ($this->model->saveeditteam($data,$id)) {
-						redirect('treatments/5');
-			} else {
-						redirect('treatments/6');
-			}
+    if ($this->model->saveeditteam($data,$id)) {
+      redirect('treatments/5');
+    } else {
+      redirect('treatments/6');
+    }
 	}
 
-
 	// SAC
-
 	public function listsac($indice=null)
 	{
 		$this->verifcar_sessao();
-
 		$this->load->model("treatments_model");
-		$treatments = $this->treatments_model->listviewSac();
-
-		$dados = array("treatments"=>$treatments);
+		$busca = $this->treatments_model->listviewSac();
+		$busca = $this->input->get('busca');
+		$url_paginacao = $busca != NULL ? base_url('/treatments/listsac?busca='.$busca.'&') : base_url('/treatments/listsac?');
 
 		$this->load->view('includes/html_header');
 		$this->load->view('includes/menu_left');
@@ -283,23 +237,24 @@ class Treatments extends CI_Controller {
 			$data['msg'] = "Erro ao atualizar!";
 			$this->load->view('includes/msg_error',$data);
 		}
-		$this->load->view('treatments/listsac.php',$dados);
+
+		/**Paginação*/
+		$get_total_results = $this->treatments_model->listviewSac($busca);
+		$total_resultados = $get_total_results['total'];
+		$get_paginacao = $this->paginacao_func($url_paginacao, $total_resultados, 60);
+	  $get_treatments = $this->treatments_model->listviewSac($busca,$get_paginacao['inicio'],$get_paginacao['qtidade_re']);
+	  $this->load->view('treatments/listsac.php', array("treatments"=>$get_treatments['dados'], 'busca'=>$busca, "pag"=>$get_paginacao['paginacao']));
+  	/*Paginação*/		
 		$this->load->view('includes/html_footer');
 	} 
 
 	public function addsac($id=null, $indice=null)
 	{
 		$this->verifcar_sessao();
-
 		$this->load->model("treatments_model");
-
 		$clients = $this->treatments_model->listClientscombo();
-
 		$result= $this->treatments_model->viewTreatments($this->uri->segment(3));
-
-		$dados = array(
-					'result'=>$result,
-					"clients"=>$clients);
+		$dados = array('result'=>$result, 'clients'=>$clients);
 
 		$this->load->view('includes/html_header');
 		$this->load->view('includes/menu_left');
@@ -314,12 +269,10 @@ class Treatments extends CI_Controller {
 		$this->load->view('includes/html_footer');
 	}
 
-		public function saveindicationsac()
+	public function saveindicationsac()
 	{
 		$this->verifcar_sessao();
-
 		$id = $this->input->post('id');
-
 		$data['name_indicated'] = $this->input->post('name_indicated');
 		$data['phone_indicated'] = $this->input->post('phone_indicated');
 		$data['client_id'] = $this->input->post('client_id');
@@ -330,43 +283,26 @@ class Treatments extends CI_Controller {
 		$data['created'] = date('Y-m-d H:i:s');
 		$data['modified'] = date('Y-m-d H:i:s');
 
-		// echo "<pre>";
-		// var_dump($data,$id);
-		// echo "</pre>";
-		// die();
-
 		$this->load->model('treatments_model', 'model', TRUE);
 
-			if ($this->model->saveindicationsac($data)) {
-						redirect('treatments/addsac/'.$id. '/1');
-			} else {
-						redirect('treatments/addsac/'.$id. '/2');
-			}
+    if ($this->model->saveindicationsac($data)) {
+      redirect('treatments/addsac/'.$id. '/1');
+    } else {
+      redirect('treatments/addsac/'.$id. '/2');
+    }
 	}
-
 
 	// SaveSac
 	public function savesactreatment()
 	{
 		$this->verifcar_sessao();
-
-		// $dataInicial = $this->input->post('date_sac');
 		$dataInicial = date('Y/m/d');
 		$dataInicial = explode('/', $dataInicial);
-        $dataInicial = $dataInicial[0].'-'.$dataInicial[1].'-'.$dataInicial[2];
-		// $dataInicial = date('Y/m/d');
-		 $hour_sac = date('H:i');
-
-		//  echo "<pre>";
-		// var_dump($dataInicial,$id);
-		// echo "</pre>";
-		// die();
-
-
-        $id = $this->input->post('id');
-        $data['usersac_id'] = $this->session->userdata('id');
+    $dataInicial = $dataInicial[0].'-'.$dataInicial[1].'-'.$dataInicial[2];
+		$hour_sac = date('H:i');
+    $id = $this->input->post('id');
+    $data['usersac_id'] = $this->session->userdata('id');
 		$data['date_sac'] = $dataInicial;
-		// $data['hour_sac'] = $this->input->post('hour_sac');
 		$data['hour_sac'] = $hour_sac;
 		$data['proximity_protected'] = $this->input->post('proximity_protected');
 		$data['state_protected'] = $this->input->post('state_protected');
@@ -377,55 +313,46 @@ class Treatments extends CI_Controller {
 		$data['feedbackrnc'] = 0; //Confirmacao do atendimento SAC
 		$data['indication'] = $this->input->post('indication');
 
-
 		$this->load->model('treatments_model', 'model', TRUE);
 
 		if ($this->model->savesactreatment($data,$id)) {
-						if ($data['rnc'] == 1) {
-						$this->load->library("email");
-						$config['protocol'] = 'smtp';
-					    $config['smtp_host'] = 'mail.guiacontato.com.br';
-					    $config['smtp_port'] = '587';
-					    $config['smtp_user'] = 'contato@guiacontato.com.br'; // email id
-					    $config['smtp_pass'] = 'contato10'; // email password
-					    $config['mailtype'] = 'html';
-					    $config['wordwrap'] = TRUE;
-					    $config['charset'] = 'utf-8';
-					    $config['newline'] = "\r\n"; //use double quotes here
-					    $this->email->initialize($config);
+      if ($data['rnc'] == 1) {
+      $this->load->library("email");
+      $config['protocol'] = 'smtp';
+      $config['smtp_host'] = 'mail.guiacontato.com.br';
+      $config['smtp_port'] = '587';
+      $config['smtp_user'] = 'contato@guiacontato.com.br'; // email id
+      $config['smtp_pass'] = 'contato10'; // email password
+      $config['mailtype'] = 'html';
+      $config['wordwrap'] = TRUE;
+      $config['charset'] = 'utf-8';
+      $config['newline'] = "\r\n"; //use double quotes here
+      $this->email->initialize($config);
 
+      $this->email->from("sistemasaccontato@gmail.com", "Sistema SAC - Contato");
+      $this->email->to(array("interno.qs.diretoria@gmail.com", "contato@guiacontato.com.br", "assessoria@qualisalva.com.br","diretoria@qualisalva.com.br", "interno.qs.operacional@gmail.com"));
+      $this->email->cc("sistemasaccontato@gmail.com"); 
+      $this->email->bcc("contato@guiacontato.com.br"); 
+      $this->email->subject("Foi gerado um RNC Nº".$id);
+      $this->email->message("Foi gerado um RNC no Sistema SAC Contao com o numero: ".$id. ".");
+      $this->email->send();
 
-						$this->email->from("sistemasaccontato@gmail.com", "Sistema SAC - Contato");
-						$this->email->to(array("interno.qs.diretoria@gmail.com", "contato@guiacontato.com.br", "assessoria@qualisalva.com.br","diretoria@qualisalva.com.br", "interno.qs.operacional@gmail.com"));
-						$this->email->cc("sistemasaccontato@gmail.com"); 
-						$this->email->bcc("contato@guiacontato.com.br"); 
-						$this->email->subject("Foi gerado um RNC Nº".$id);
-						$this->email->message("Foi gerado um RNC no Sistema SAC Contao com o numero: ".$id. ".");
-						$this->email->send();
+        redirect('treatments/listsac/1');
+      } else {
+        redirect('treatments/listsac/1');
+      }
 
-						// echo $this->email->print_debugger();
-						// die();
-
-							redirect('treatments/listsac/1');
-						} else {
-							redirect('treatments/listsac/1');
-						}
-
-			} else {
-						redirect('treatments/listsac2');
-			}
+		} else {
+			redirect('treatments/listsac2');
+		}
 
 	}
 
 	public function viewsac($id=null)
 	{
 		$this->verifcar_sessao();
-
 		$this->load->model("treatments_model");
-
-
 		$this->data['result'] = $this->treatments_model->viewsacTreatments($this->uri->segment(3));
-
 		$this->load->view('includes/html_header');
 		$this->load->view('includes/menu_left');
 		$this->load->view('treatments/viewsac.php',$this->data);
@@ -435,12 +362,8 @@ class Treatments extends CI_Controller {
 	public function editsac($id=null)
 	{
 		$this->verifcar_sessao();
-
 		$this->load->model("treatments_model");
-
-
 		$this->data['result'] = $this->treatments_model->editSacs($this->uri->segment(3));
-
 		$this->load->view('includes/html_header');
 		$this->load->view('includes/menu_left');
 		$this->load->view('treatments/editsac.php',$this->data);
@@ -450,15 +373,10 @@ class Treatments extends CI_Controller {
 	public function saveeditsac()
 	{
 		$this->verifcar_sessao();
-
 		$dataInicial = $this->input->post('tdate_sac');
 		$dataInicial = explode('/', $dataInicial);
-        $dataInicial = $dataInicial[2].'-'.$dataInicial[1].'-'.$dataInicial[0];
-		// $dataInicial = date('Y/m/d');
-
-
+    $dataInicial = $dataInicial[2].'-'.$dataInicial[1].'-'.$dataInicial[0];
 		$id = $this->input->post('id');
-		// $data['client_id'] = $this->input->post('client_id');
 		$data['tdate_sac'] = $dataInicial;
 		$data['thour_sac'] = $this->input->post('thour_sac');
 		$data['tproximity_protected'] = $this->input->post('tproximity_protected');
@@ -469,28 +387,20 @@ class Treatments extends CI_Controller {
 		$data['tindication'] = $this->input->post('tindication');
 		$data['usersac_id'] = $this->session->userdata('id');
 
-		// echo "<pre>";
-		// var_dump($data,$id);
-		// echo "</pre>";
-		// die();
-
-
 		$this->load->model('treatments_model', 'model', TRUE);
 
-			if ($this->model->saveeditteam2($data,$id)) {
-						redirect('treatments/5');
-			} else {
-						redirect('treatments/6');
-			}
+    if ($this->model->saveeditteam2($data,$id)) {
+      redirect('treatments/5');
+    } else {
+      redirect('treatments/6');
+    }
 	}
-
 
 	//RNC
 
 	public function listrnc($indice=null)
 	{
 		$this->verifcar_sessao();
-
 		$this->load->model("treatments_model");
 		$treatments = $this->treatments_model->listTreatmentsrnc();
 
@@ -524,12 +434,8 @@ class Treatments extends CI_Controller {
 	public function viewrnc($id=null)
 	{
 		$this->verifcar_sessao();
-
 		$this->load->model("treatments_model");
-
-
 		$this->data['result'] = $this->treatments_model->viewrncTreatments($this->uri->segment(3));
-
 		$this->load->view('includes/html_header');
 		$this->load->view('includes/menu_left');
 		$this->load->view('treatments/viewrnc.php',$this->data);
@@ -539,12 +445,8 @@ class Treatments extends CI_Controller {
 	public function addrnc($id=null)
 	{
 		$this->verifcar_sessao();
-
 		$this->load->model("treatments_model");
-
-
 		$this->data['result'] = $this->treatments_model->viewrncTreatments($this->uri->segment(3));
-
 		$this->load->view('includes/html_header');
 		$this->load->view('includes/menu_left');
 		$this->load->view('treatments/addrnc.php',$this->data);
@@ -555,11 +457,8 @@ class Treatments extends CI_Controller {
 	public function savernctreatment()
 	{
 		$this->verifcar_sessao();
-
-
-
-        $id = $this->input->post('id');
-        // $data['usersac_id'] = $this->session->userdata('id');
+    $id = $this->input->post('id');
+    // $data['usersac_id'] = $this->session->userdata('id');
 		$data['complaint_rnc'] = $this->input->post('complaint_rnc');
 		$data['suggestion_rnc'] = $this->input->post('suggestion_rnc');
 		$data['description_rnc'] = $this->input->post('description_rnc');
@@ -587,32 +486,20 @@ class Treatments extends CI_Controller {
 		$data['feedbackrnc'] = 1; //Confirmacao do atendimento RNC
 		$data['feedbackreturn'] = 0; //Confirmacao do atendimento RNC
 
-
-		// echo "<pre>";
-		// var_dump($data,$id);
-		// echo "</pre>";
-		// die();
-
-
 		$this->load->model('treatments_model', 'model', TRUE);
 
 			if ($this->model->savernctreatment($data,$id)) {
-						redirect('treatments/listrnc/1');
+				redirect('treatments/listrnc/1');
 			} else {
-						redirect('treatments/listrnc2');
+				redirect('treatments/listrnc2');
 			}
 	}
-
 
 	public function editrnc($id=null)
 	{
 		$this->verifcar_sessao();
-
 		$this->load->model("treatments_model");
-
-
 		$this->data['result'] = $this->treatments_model->viewrncTreatments($this->uri->segment(3));
-
 		$this->load->view('includes/html_header');
 		$this->load->view('includes/menu_left');
 		$this->load->view('treatments/editrnc.php',$this->data);
@@ -623,14 +510,9 @@ class Treatments extends CI_Controller {
 	public function listrncreturn($indice=null)
 	{
 		$this->verifcar_sessao();
-
 		$this->load->model("treatments_model");
 		$treatments = $this->treatments_model->listTreatmentsrncreturn();
-
-		//$this->output->enable_profiler(TRUE);
-
 		$dados = array("treatments"=>$treatments);
-
 		$this->load->view('includes/html_header');
 		$this->load->view('includes/menu_left');
 		if ($indice==1) {
@@ -656,16 +538,11 @@ class Treatments extends CI_Controller {
 		$this->load->view('includes/html_footer');
 	}
 
-
 	public function viewrncreturn($id=null)
 	{
 		$this->verifcar_sessao();
-
 		$this->load->model("treatments_model");
-
-
 		$this->data['result'] = $this->treatments_model->viewrncTreatments($this->uri->segment(3));
-
 		$this->load->view('includes/html_header');
 		$this->load->view('includes/menu_left');
 		$this->load->view('treatments/viewrncreturn.php',$this->data);
@@ -675,12 +552,8 @@ class Treatments extends CI_Controller {
 	public function addrncreturn($id=null)
 	{
 		$this->verifcar_sessao();
-
 		$this->load->model("treatments_model");
-
-
 		$this->data['result'] = $this->treatments_model->viewrncTreatments($this->uri->segment(3));
-
 		$this->load->view('includes/html_header');
 		$this->load->view('includes/menu_left');
 		$this->load->view('treatments/addrncreturn.php',$this->data);
@@ -691,14 +564,10 @@ class Treatments extends CI_Controller {
 	public function savernctreatmentreturn()
 	{
 		$this->verifcar_sessao();
-
 		$dataInicial = $this->input->post('date_return');
 		$dataInicial = explode('/', $dataInicial);
-        $dataInicial = $dataInicial[2].'-'.$dataInicial[1].'-'.$dataInicial[0];
-
-
-
-        $id = $this->input->post('id');
+    $dataInicial = $dataInicial[2].'-'.$dataInicial[1].'-'.$dataInicial[0];
+    $id = $this->input->post('id');
 		$data['date_return'] = $dataInicial;
 		$data['hour_return'] = $this->input->post('hour_return');
 		$data['information_return'] = $this->input->post('information_return');
@@ -708,38 +577,23 @@ class Treatments extends CI_Controller {
 		$data['feedbackreturn'] = $this->input->post('feedbackreturn');
 		$data['userreturn_id'] = $this->session->userdata('id');
 
-
-
-		// echo "<pre>";
-		// var_dump($data,$id);
-		// echo "</pre>";
-		// die();
-
-
 		$this->load->model('treatments_model', 'model', TRUE);
-
 			if ($this->model->savernctreatmentreturn($data,$id)) {
-						redirect('treatments/listrncreturn/1');
+				redirect('treatments/listrncreturn/1');
 			} else {
-						redirect('treatments/listrncreturn/2');
+				redirect('treatments/listrncreturn/2');
 			}
 	}
 
 	public function editrncreturn($id=null)
 	{
 		$this->verifcar_sessao();
-
 		$this->load->model("treatments_model");
-
-
 		$this->data['result'] = $this->treatments_model->viewrncTreatments($this->uri->segment(3));
-
 		$this->load->view('includes/html_header');
 		$this->load->view('includes/menu_left');
 		$this->load->view('treatments/editrncreturn.php',$this->data);
 		$this->load->view('includes/html_footer');
 	}
-
-
 
 }
