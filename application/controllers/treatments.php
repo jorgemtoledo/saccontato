@@ -91,6 +91,15 @@ class Treatments extends CI_Controller {
 		return $dados;
 	}
 
+  // Export to excel
+	public function exp_all_excel(){
+		$this->verifcar_sessao();
+		$this->load->model("treatments_model");
+		$list_treatments = $this->treatments_model->list_all_excel();
+		$dados = array("list_treatments"=>$list_treatments);
+		$this->load->view('treatments/exp_all_excel',$dados);
+	}
+
 	public function add()
 	{
 		$this->verifcar_sessao();

@@ -12,6 +12,7 @@
                             <input type="submit" name="btn" class="btn btn-primary"  value="Buscar"/>
                             <a class="btn btn-primary" href="<?php echo base_url() ?>treatments/add" ><i class="glyphicon glyphicon-plus" data-toggle="tooltip" title="Fazer Atendimento"></i>  Formulário</a>
                             <a class="btn btn-success" href="<?php echo base_url() ?>clients/addop" ><i class="glyphicon glyphicon-plus"></i>  Cliente</a>
+                            <a class="btn btn-warning" href="<?php echo base_url() ?>treatments/exp_all_excel" ><i class="glyphicon glyphicon-floppy-save"></i>  Excel</a>
                         </div>
                     </div>
                 </div>

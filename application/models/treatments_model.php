@@ -46,7 +46,41 @@
 			$dados['total'] =$sql->num_rows();
 			$dados['dados'] = $sql->result_array();
 			return $dados;
-   		}
+    }
+    
+    public function list_all_excel(){
+      $this->db->select(
+      'T.id as tid,
+       T.hour as thour,
+       T.date as tdate,
+       T.type_care as ttype_care,
+       T.description_care as tdescription_care,
+       T.information_care as tinformation_care,
+       T.number_radio as tnumber_radio,
+       T.motorcycle as tmotorcycle,
+       T.motorcycle_id as tmotorcycle_id,
+       T.ambulance as tambulance,
+       T.approved as tapproved,
+       T.ambulance_id as tambulance_id,
+       T.name_contact as tname_contact,
+       T.phone_contact as tphone_contact,
+       T.hour_contact as thour_contact,
+       T.rnc as trnc,
+       T.usersac_id as tusersac_id,
+       T.indication as tindication,
+       T.sac as tsac,
+       Usac.name as usacname,
+       U.name as uname,
+       C.name as cname');
+      $this->db->from('treatments as T');
+      $this->db->join('clients as C', 'C.id = T.client_id','inner');
+      $this->db->join('users as U', 'U.id = T.user_id','inner');
+      $this->db->join('users as Usac', 'Usac.id = T.usersac_id','inner');
+      $this->db->order_by("tid", "desc");
+      $this->db->limit(5000);
+      $query = $this->db->get();
+      return $query->result();
+    }
 
 		 public function savetreatment($data){
 		 	return $this->db->insert('treatments', $data);
