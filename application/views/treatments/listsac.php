@@ -9,6 +9,8 @@
                               <input type="text" name="busca" placeholder="Atendente" value ="<?php echo  $busca ?>" class="form-control" />
                             </label>
                             <input type="submit" name="btn" class="btn btn-primary"  value="Buscar"/>
+                            <a class="btn btn-warning" href="<?php echo base_url() ?>treatments/exp_sac_excel" ><i class="glyphicon glyphicon-floppy-save"></i>  Excel</a>
+
                         </div>
                     </div>
                 </div>

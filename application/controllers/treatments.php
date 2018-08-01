@@ -91,13 +91,22 @@ class Treatments extends CI_Controller {
 		return $dados;
 	}
 
-  // Export to excel
+  // Export list all excel
 	public function exp_all_excel(){
 		$this->verifcar_sessao();
 		$this->load->model("treatments_model");
 		$list_treatments = $this->treatments_model->list_all_excel();
 		$dados = array("list_treatments"=>$list_treatments);
 		$this->load->view('treatments/exp_all_excel',$dados);
+  }
+  
+  // Export sac excel
+	public function exp_sac_excel(){
+		$this->verifcar_sessao();
+		$this->load->model("treatments_model");
+		$list_sac_treatments = $this->treatments_model->list_sac_excel();
+		$dados = array("list_sac_treatments"=>$list_sac_treatments);
+		$this->load->view('treatments/exp_sac_excel',$dados);
 	}
 
 	public function add()
